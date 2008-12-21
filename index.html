@@ -1,9 +1,23 @@
 <html>
   <body>
-    <form method="POST" action="/">
-      <input type="hidden" name="from" value="Me" />
-      <input type="hidden" name="to" value="Them" />
-      <input type="submit" value="Poing!">
-    </form>
+    <p>
+      Check your poing:
+      <form method="GET" action="/poing">
+        <label for="poinger">From:</label>
+        <input type="text" name="poinger" /><br />
+        <label for="poingee">To:</label>
+        <input type="text" name="poingee" /><br />
+        <input type="submit" value="Check">
+      </form>
+    </p><p>
+      Send a poing:
+      <form method="POST" action="/poing">
+          <label for="poinger">From:</label>
+          <input type="text" name="poinger" /><br />
+          <label for="poingee">To:</label>
+          <input type="text" name="poingee" /><br />
+          <input type="submit" value="Poing!">
+        </form>
+    </p>
   </body>
 </html>
