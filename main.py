@@ -4,27 +4,30 @@ import cgi
 import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+from google.appengine.ext import db
+
+class Poing(db.Model):
+	sender = db.StringProperty(multiline=False)
+	receiver = db.StringProperty(multiline=False)
+	time = db.DateTimeProperty(auto_now_add=False)
 
 
 class MainHandler(webapp.RequestHandler):
 	
 	def get(self):
-		path = self.view('index')
-		self.response.out.write(template.render(path, {}))
+		self.render('index')
 
 	def post(self):
-		path = self.view('poinged')
-		
 		data = {
 			'from': self.request.get('from'),
 			'to': self.request.get('to'),
 			'time': time.time()
 		}
-		self.response.out.write(template.render(path, data))
+		self.render('poinged', data)
 
-	def view(self, filename):
-		return os.path.join(os.path.dirname(__file__), 'views', 'main',
-												filename+'.html')
+	def render(self, filename, data=None):
+		path = os.path.join(os.path.dirname(__file__), filename+'.html')
+		self.response.out.write(template.render(path, data or {}))
 
 
 def main():
