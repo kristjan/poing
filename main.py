@@ -26,6 +26,7 @@ class PoingHandler(SmartHandler):
 		poingee = self.request.get('poingee')
 
 		poing = Poing.get_by_key_name("%s_%s" % (poinger, poingee))
+		poing = poing or Poing(poinger=poinger, poingee=poingee)
 
 		data = { 'poing': poing }
 		self.render('poinged', data)

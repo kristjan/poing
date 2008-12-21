@@ -1,1 +1,5 @@
-{{ poing.poinger }} poinged {{ poing.poingee }} at {{ poing.poinged }}!
+{% if poing.is_saved %}
+  {{ poing.poinger }} poinged {{ poing.poingee }} at {{ poing.poinged }}!
+{% else %}
+  {{ poing.poinger }} hasn't poinged {{ poing.poingee }}
+{% endif %}
