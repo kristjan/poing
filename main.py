@@ -36,7 +36,7 @@ class PoingHandler(SmartHandler):
 		poing = poing or Poing(poinger=poinger, poingee=poingee)
 
 		data = { 'poing': poing }
-		self.render('poinged', data)
+		self.render('poing', data)
 
 	def post(self):
 		poinger = self.request.get('poinger')
@@ -51,7 +51,7 @@ class PoingHandler(SmartHandler):
 		poing = Poing.get(poing.key()) # Reload timestamp from put()
 
 		data = { 'poing': poing }
-		self.render('poinged', data)
+		self.render('poing', data)
 
 
 def main():
