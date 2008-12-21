@@ -1,5 +1,8 @@
 <html>
   <body>
+    {% if msg %}
+      <h3>{{ msg }}</h3>
+    {% endif %}
     <p>
       Check your poing:
       <form method="GET" action="/poing">
