@@ -31,6 +31,8 @@ class PoingHandler(SmartHandler):
 		if not poinger or not poingee:
 			self.redirect('/?msg=%s' % MISSING_DATA)
 			return
+		poinger = poinger.lower()
+		poingee = poingee.lower()
 
 		poing = Poing.get_by_key_name("%s_%s" % (poinger, poingee))
 		poing = poing or Poing(poinger=poinger, poingee=poingee)
@@ -44,6 +46,8 @@ class PoingHandler(SmartHandler):
 		if not poinger or not poingee:
 			self.redirect('/?msg=%s' % MISSING_DATA)
 			return
+		poinger = poinger.lower()
+		poingee = poingee.lower()
 
 		poing = Poing.get_or_insert("%s_%s" % (poinger, poingee),
 																poinger=poinger, poingee=poingee)
