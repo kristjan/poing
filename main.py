@@ -7,9 +7,9 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 
 class Poing(db.Model):
-	sender = db.StringProperty(multiline=False)
-	receiver = db.StringProperty(multiline=False)
-	time = db.DateTimeProperty(auto_now_add=False)
+	poinger = db.StringProperty(multiline=False)
+	poingee = db.StringProperty(multiline=False)
+	poinged = db.DateTimeProperty(auto_now=True)
 
 
 class MainHandler(webapp.RequestHandler):
@@ -18,12 +18,16 @@ class MainHandler(webapp.RequestHandler):
 		self.render('index')
 
 	def post(self):
-		data = {
-			'from': self.request.get('from'),
-			'to': self.request.get('to'),
-			'time': time.time()
-		}
+		poinger = self.request.get('from')
+		poingee = self.request.get('to')
+
+		poing = Poing.get_or_insert("%s_%s" % (poinger, poingee),
+																poinger=poinger, poingee=poingee)
+		poing.put()
+
+		data = { 'poing': poing }
 		self.render('poinged', data)
+
 
 	def render(self, filename, data=None):
 		path = os.path.join(os.path.dirname(__file__), filename+'.html')
