@@ -11,7 +11,7 @@ POST_URL = 'http://' + HOST + ACTION
 
 ERROR = "ERROR"
 
-Shoes.app :width => 55, :height => 30, :resizeable => false do
+Shoes.app :width => 55, :height => 30, :resizable => false do
   background "#FFF"
 
   @their_poing = @my_poing = -1
