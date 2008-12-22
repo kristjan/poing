@@ -1,8 +1,8 @@
 require 'net/http'
 require 'uri'
 
-ME   = {:name => 'Me', :color => [0, 255, 0]}
-THEM = {:name => 'Them',    :color => [0, 0, 255]}
+THEM   = {:name => 'Me', :color => [0, 255, 0]}
+ME = {:name => 'Them',    :color => [0, 0, 255]}
 
 HOST = 'poingme.appspot.com'
 ACTION = '/poing'
@@ -11,15 +11,20 @@ POST_URL = 'http://' + HOST + ACTION
 
 ERROR = "ERROR"
 
+
 Shoes.app :width => 55, :height => 30, :resizable => false do
   background "#FFF"
 
   @their_poing = @my_poing = -1
 
+  def update_poings
+    @their_poing = poinged(ME[:name], THEM[:name])
+    @my_poing    = poinged(THEM[:name], ME[:name])
+  end
+
   def poinged(from, to)
     poing = Net::HTTP.get HOST, GET_PARAMS % [from, to]
     poing = -1 if poing.empty? || ERROR == poing
-    debug "Getting poing for #{from} -> #{to}: #{poing.to_i}"
     poing.to_i
   end
 
@@ -29,9 +34,40 @@ Shoes.app :width => 55, :height => 30, :resizable => false do
     ERROR != poing.body
   end
 
-  TWELVE_HOURS = (12*60*60).to_f
+  class ::Fixnum
+    def second
+      self
+    end
+    alias :seconds :second
+
+    def minute
+      self*60
+    end
+    alias :minutes :minute
+
+    def hour
+      self*3600
+    end
+    alias :hours :hour
+  end
+
+  INFINITY = 1.0/0
+  ALPHAS = [
+            [0, 255],
+            [1.minute, 127],
+            [10.minutes, 63],
+            [1.hour, 31],
+            [6.hours, 15],
+            [12.hours, 0],
+            [INFINITY, 0]
+           ]
   def alpha(time)
-    alpha = ([1 - (time / TWELVE_HOURS), 0].max * 255).to_i
+    index = 0
+    begin
+      break if (ALPHAS[index].first...ALPHAS[index+1].first).include?(time)
+      index += 1
+    end while ALPHAS[index].first < INFINITY
+    val = ALPHAS[index].last
   end
 
   def color(base, time)
@@ -52,17 +88,11 @@ Shoes.app :width => 55, :height => 30, :resizable => false do
   end
 
   click do
-    Thread.new do
-      poing
-      @their_poing = 0
-    end
+    @their_poing = 0
+    poing
   end
 
-  Thread.new do
-    loop do
-      @their_poing = poinged(ME[:name], THEM[:name])
-      @my_poing    = poinged(THEM[:name], ME[:name])
-      sleep 5
-    end
+  every 5.seconds do
+    update_poings
   end
 end
