@@ -39,7 +39,7 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
     rgb(*(base + [alpha(time)]))
   end
 
-  def update_poinger
+  def update_dots
     @my_dot.fill = color(ME[:color], @my_poing)
     @their_dot.fill = color(THEM[:color], @their_poing)
   end
@@ -48,12 +48,14 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
   @their_dot = oval :radius => 10, :top => 5, :left => 30
 
   animate do
-    update_poinger
+    update_dots
   end
 
   click do
-    poing
-    @their_poing = poinged(ME[:name], THEM[:name])
+    Thread.new do
+      poing
+      @their_poing = 0
+    end
   end
 
   Thread.new do
