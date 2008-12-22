@@ -6,8 +6,8 @@ POINGEE = 'Them'
 
 HOST = 'poingme.appspot.com'
 ACTION = '/poing'
-PARAMS = "?poinger=#{POINGER}&poingee=#{POINGEE}"
-GET_ACTION = ACTION + PARAMS
+GET_PARAMS = "?poinger=#{POINGER}&poingee=#{POINGEE}"
+GET_ACTION = ACTION + GET_PARAMS
 POST_URL = 'http://' + HOST + ACTION
 
 Shoes.app do
