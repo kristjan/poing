@@ -30,10 +30,8 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
   end
 
   TWELVE_HOURS = (12*60*60).to_f
-  ONE_MINUTE = 60.0
-  TOTAL_DECAY = ONE_MINUTE
   def alpha(time)
-    alpha = ([1 - (time / TOTAL_DECAY), 0].max * 255).to_i
+    alpha = ([1 - (time / TWELVE_HOURS), 0].max * 255).to_i
   end
 
   def color(base, time)
@@ -43,7 +41,6 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
 
   MY_COLOR = [255, 0, 0]
   THEIR_COLOR = [0, 255, 0]
-
   def update_poinger
     @my_dot.fill = color(MY_COLOR, @my_poing)
     @their_dot.fill = color(THEIR_COLOR, @their_poing)
