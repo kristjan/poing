@@ -1,8 +1,8 @@
 require 'net/http'
 require 'uri'
 
-POINGER = 'Me'
-POINGEE = 'Them'
+ME   = {:name => 'Me', :color => [0, 255, 0]}
+THEM = {:name => 'Them',    :color => [0, 0, 255]}
 
 HOST = 'poingme.appspot.com'
 ACTION = '/poing'
@@ -25,7 +25,7 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
 
   def poing
     poing = Net::HTTP.post_form URI.parse(POST_URL),
-                 :poinger => POINGER, :poingee => POINGEE
+                 :poinger => ME[:name], :poingee => THEM[:name]
     ERROR != poing.body
   end
 
@@ -39,11 +39,9 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
     rgb(*(base + [alpha(time)]))
   end
 
-  MY_COLOR = [255, 0, 0]
-  THEIR_COLOR = [0, 255, 0]
   def update_poinger
-    @my_dot.fill = color(MY_COLOR, @my_poing)
-    @their_dot.fill = color(THEIR_COLOR, @their_poing)
+    @my_dot.fill = color(ME[:color], @my_poing)
+    @their_dot.fill = color(THEM[:color], @their_poing)
   end
 
   @my_dot = oval :radius => 10, :top => 5, :left => 5
@@ -55,13 +53,13 @@ Shoes.app :width => 55, :height => 30, :resizeable => false do
 
   click do
     poing
-    @their_poing = poinged(POINGER, POINGEE)
+    @their_poing = poinged(ME[:name], THEM[:name])
   end
 
   Thread.new do
     loop do
-      @their_poing = poinged(POINGER, POINGEE)
-      @my_poing = poinged(POINGEE, POINGER)
+      @their_poing = poinged(ME[:name], THEM[:name])
+      @my_poing    = poinged(THEM[:name], ME[:name])
       sleep 5
     end
   end
