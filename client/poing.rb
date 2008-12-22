@@ -1,8 +1,8 @@
 require 'net/http'
 require 'uri'
 
-THEM   = {:name => 'Me', :color => [0, 255, 0]}
-ME = {:name => 'Them',    :color => [0, 0, 255]}
+ME   = {:name => 'Me', :color => [0, 255, 0]}
+THEM = {:name => 'Them',    :color => [0, 0, 255]}
 
 HOST = 'poingme.appspot.com'
 ACTION = '/poing'
