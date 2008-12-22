@@ -1,5 +1,5 @@
 import os
-import time
+from datetime import datetime
 import cgi
 import wsgiref.handlers
 from google.appengine.ext import webapp
@@ -26,37 +26,46 @@ class MainHandler(SmartHandler):
 
 class PoingHandler(SmartHandler):
 	def get(self):
+		self.response.content_type = 'text/plain'
 		poinger = self.request.get('poinger')
 		poingee = self.request.get('poingee')
 		if not poinger or not poingee:
-			self.redirect('/?msg=%s' % MISSING_DATA)
+			self.response.out.write('ERROR')
 			return
 		poinger = poinger.lower()
 		poingee = poingee.lower()
 
 		poing = Poing.get_by_key_name("%s_%s" % (poinger, poingee))
-		poing = poing or Poing(poinger=poinger, poingee=poingee)
 
-		data = { 'poing': poing }
-		self.render('poing', data)
+		now = datetime.utcnow()
+		if poing:
+			poinged = poing.poinged
+		else:
+			poinged = now
+		time_since_poing = time_in_seconds(now - poinged)
+		
+		self.response.content_type = 'text/plain'
+		self.response.out.write(time_since_poing)
 
 	def post(self):
+		self.response.content_type = 'text/plain'
 		poinger = self.request.get('poinger')
 		poingee = self.request.get('poingee')
 		if not poinger or not poingee:
-			self.redirect('/?msg=%s' % MISSING_DATA)
+			self.response.out.write('ERROR')
 			return
 		poinger = poinger.lower()
 		poingee = poingee.lower()
 
 		poing = Poing.get_or_insert("%s_%s" % (poinger, poingee),
 																poinger=poinger, poingee=poingee)
-		poing.put()
-		poing = Poing.get(poing.key()) # Reload timestamp from put()
+		poing.put() # Updates poinged
 
-		data = { 'poing': poing }
-		self.render('poing', data)
+		self.response.out.write('OK')
 
+DAYS_TO_SECONDS = 24*60*60
+def time_in_seconds(delta):
+	return delta.days * DAYS_TO_SECONDS + delta.seconds
 
 def main():
   application = webapp.WSGIApplication([('/', MainHandler),
